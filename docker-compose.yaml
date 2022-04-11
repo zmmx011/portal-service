@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  portalservice:
+    image: kds.inveniacorp.com/dev/portal-service/portal-service:latest
+    networks:
+      - msa
+    ports:
+      - "8012:8012"
+    environment:
+      TZ: "Asia/Seoul"
+      SPRING_PROFILES_ACTIVE: dev
+      SERVER_PORT: "8012"
+      EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
+      EUREKASERVER_PORT: "8761"
+      CONFIGSERVER_URI: "http://configserver:8888"
+      CONFIGSERVER_PORT: "8888"
+      ENCRYPT_KEY: "damu"
+networks:
+  msa:
+    external: true
+    name: msa

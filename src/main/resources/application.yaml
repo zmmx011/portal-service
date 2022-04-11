@@ -1,0 +1,38 @@
+# Default settings
+server:
+  port: 8012
+spring:
+  application:
+    name: portal-service
+  config:
+    import: "optional:configserver:"
+  rabbitmq:
+    host: ${RABBITMQ_HOST:127.0.0.1}
+    port: 5672
+    username: admin
+    password: inveni@2021
+  cloud:
+    inetutils:
+      ignored-interfaces:
+        - eth0*
+        - eth2*
+    config:
+      discovery:
+        enabled: true # 유레카에서 검색
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+management:
+  endpoint:
+    health:
+      show-details: always # actuator에서 디테일한 정보들을 확인하기 위해 설정
+  health:
+    diskspace:
+      enabled: true
+eureka:
+  client:
+    registerWithEureka: true # 유레카에 서비스 등록
+    fetchRegistry: true # 레지스트리 사본을 로컬로 캐시한다
+    serviceUrl:
+      defaultZone: ${EUREKASERVER_URI:http://localhost:8761/eureka} # 유레카 서비스 위치
