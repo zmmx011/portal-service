@@ -5,24 +5,30 @@ spring:
   application:
     name: portal-service
   config:
-    import: "optional:configserver:"
+    import: optional:configserver:${CONFIGSERVER_URI:http://localhost:8888}
   rabbitmq:
     host: ${RABBITMQ_HOST:127.0.0.1}
     port: 5672
     username: admin
     password: inveni@2021
   cloud:
+    config:
+      fail-fast: true # 실패시 재시도
+      discovery:
+        enabled: true # 유레카에서 검색
     inetutils:
       ignored-interfaces:
         - eth0*
         - eth2*
-    config:
-      discovery:
-        enabled: true # 유레카에서 검색
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://sso.inveniacorp.com/auth/realms/service
 management:
   endpoint:
     health:

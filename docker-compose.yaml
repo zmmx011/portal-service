@@ -12,9 +12,10 @@ services:
       SERVER_PORT: "8012"
       EUREKASERVER_URI: "http://eurekaserver:8761/eureka/"
       EUREKASERVER_PORT: "8761"
-      CONFIGSERVER_URI: "http://configserver:8888"
-      CONFIGSERVER_PORT: "8888"
       ENCRYPT_KEY: "damu"
+      KEYCLOAK_URI: "http://100.100.15.82:8080/auth" # 호스트 주소
+      KEYCLOAK_REALM: "service"
+      CONFIGSERVER_URI: "http://configserver:8888"
 networks:
   msa:
     external: true
