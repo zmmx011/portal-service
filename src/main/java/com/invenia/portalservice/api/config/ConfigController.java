@@ -26,7 +26,7 @@ public class ConfigController {
   private final ConfigRepository configRepository;
 
   @GetMapping("/{id}")
-  @PreAuthorize(value = "(principal.getClaimAsString('preferred_username') == #id ) or hasRole('admin')")
+  @PreAuthorize("(principal.getClaimAsString('preferred_username') == #id ) or hasRole('admin')")
   public ResponseEntity<Config> get(@PathVariable String id) {
     return configRepository
         .findById(id)
