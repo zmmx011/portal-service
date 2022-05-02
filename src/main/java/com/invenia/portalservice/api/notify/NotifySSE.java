@@ -18,7 +18,6 @@ import org.springframework.amqp.rabbit.listener.MessageListenerContainer;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +29,7 @@ import reactor.core.publisher.Flux;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/notify")
-@CrossOrigin("http://localhost:3000")
-public class NotifyController {
+public class NotifySSE {
 
   private final AmqpAdmin amqpAdmin;
 
@@ -42,19 +40,18 @@ public class NotifyController {
   @PostConstruct
   public void setupTopicDestinations() {
     destinationsConfig.getTopics().forEach((key, destination) -> {
-          log.info("Creating TopicExchange: name={}, exchange={}", key, destination.getExchange());
-          amqpAdmin.declareExchange(
-              ExchangeBuilder.topicExchange(destination.getExchange())
+      log.info("Creating TopicExchange: name={}, exchange={}", key, destination.getExchange());
+      amqpAdmin.declareExchange(
+          ExchangeBuilder.topicExchange(destination.getExchange())
               .durable(true)
               .build());
-          log.info("Topic Exchange successfully created.");
-        });
+      log.info("Topic Exchange successfully created.");
+    });
   }
 
   @GetMapping(value = "/subscribe/{id}", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
   @PreAuthorize("principal.getClaimAsString('preferred_username') == #id")
   public Flux<?> subscribe(@PathVariable String id) {
-
     DestinationInfo destinationInfo = destinationsConfig.getTopics().get("notify");
     if (destinationInfo == null) {
       return Flux.just(ResponseEntity.notFound().build());
@@ -77,15 +74,12 @@ public class NotifyController {
   }
 
   private Queue createTopicQueue(DestinationsConfig.DestinationInfo destination, String routingKey) {
-
     Exchange exchange = ExchangeBuilder.topicExchange(destination.getExchange())
         .durable(true)
         .build();
 
     amqpAdmin.declareExchange(exchange);
-
     Queue queue = QueueBuilder.nonDurable().build();
-
     amqpAdmin.declareQueue(queue);
 
     Binding binding = BindingBuilder.bind(queue)
@@ -94,8 +88,6 @@ public class NotifyController {
         .noargs();
 
     amqpAdmin.declareBinding(binding);
-
     return queue;
   }
-
 }
