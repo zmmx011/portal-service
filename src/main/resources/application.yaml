@@ -3,9 +3,6 @@ server:
   port: 8012
 
 spring:
-  mvc:
-    servlet:
-      path: /portal-service/v1
   application:
     name: portal-service
   config:

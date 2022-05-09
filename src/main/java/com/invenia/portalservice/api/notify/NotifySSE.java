@@ -28,7 +28,7 @@ import reactor.core.publisher.Flux;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/notify")
+@RequestMapping("/portal-service/v1/notify")
 public class NotifySSE {
 
   private final AmqpAdmin amqpAdmin;
