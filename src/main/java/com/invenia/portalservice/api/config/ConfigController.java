@@ -51,11 +51,4 @@ public class ConfigController {
       return ResponseEntity.internalServerError().build();
     }
   }
-
-  @GetMapping("/ping")
-  public String ping() {
-    SecurityContext context = SecurityContextHolder.getContext();
-    Authentication authentication = context.getAuthentication();
-    return "Roles: " + authentication.getAuthorities();
-  }
 }
